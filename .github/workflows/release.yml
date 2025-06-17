@@ -81,6 +81,8 @@ jobs:
         [[ "$GITHUB_REF" == "refs/tags/v"* ]] && TAGS=$(echo $TAGS | sed -e 's/^v//')
         # Expand tags: 1.2.3 -> 1 1.2 1.2.3
         TAGS="$(echo "$TAGS" | sed -E -e 's/^((([0-9]+)\.[0-9]+)\.[0-9]+)$/\3 \2 \1/')"
+        
+        docker images
 
         for IMAGE in $PODMAN_IMAGE; do
           TAG_SUFFIX=$(echo $IMAGE | sed -E -e 's/^([^-]+)//')
