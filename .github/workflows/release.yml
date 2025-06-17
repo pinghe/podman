@@ -93,7 +93,7 @@ jobs:
             TAG_OPTS="$TAG_OPTS -t $GITHUB_IMAGE_REPO:$TAG"
             printf ' %s' "$TAG"
             echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
-            docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
+            echo docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
           done
           echo
         done
