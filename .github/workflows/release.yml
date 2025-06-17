@@ -90,7 +90,7 @@ jobs:
           printf 'Pushing image tags: '
           for TAG in $IMAGE_TAGS; do
             [ "$TAG" = "$LATEST_TAG" ] || TAG="${TAG}${TAG_SUFFIX}"
-            TAG_OPTS="$TAG_OPTS -t $DOCKERHUB_IMAGE_REPO:$TAG -t $GITHUB_IMAGE_REPO:$TAG"
+            TAG_OPTS="$TAG_OPTS -t $GITHUB_IMAGE_REPO:$TAG"
             printf ' %s' "$TAG"
           done
           echo
