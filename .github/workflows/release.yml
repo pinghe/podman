@@ -42,7 +42,7 @@ jobs:
         export PODMAN_TAR_IMAGE=${PODMAN_IMAGE}-tar
 
         export PLATFORM=linux/amd64
-        export ARCH=$(shell echo "${PLATFORM}" | sed -E 's!linux/([^/]+).*!\1!')
+        export ARCH=$(echo "${PLATFORM}" | sed -E 's!linux/([^/]+).*!\1!')
         export IMAGE_EXPORT_DIR=${BUILD_DIR}/images/podman
         export BUILDX_BUILDER=podman-builder
         # TODO: just push the other image and build tar files from output, skip tests for other platforms for now
