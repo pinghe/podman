@@ -36,7 +36,7 @@ jobs:
       run: |
         docker images
 
-        export PODMAN_IMAGE_NAME=pinghe/podman
+        PODMAN_IMAGE_NAME=pinghe/podman
         export PODMAN_IMAGE=${PODMAN_IMAGE_NAME}:latest
         export PODMAN_IMAGE_TARGET=podmanall
         export PODMAN_TAR_IMAGE=${PODMAN_IMAGE}-tar
