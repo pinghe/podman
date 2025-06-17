@@ -1,4 +1,4 @@
-FROM ghcr.io/mgoltzsche/podman:5.5.1 as prod
+FROM ghcr.io/mgoltzsche/podman:5.5.1 AS prod
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai

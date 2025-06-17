@@ -51,7 +51,7 @@ jobs:
         BUILDX_OPTS="--output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
 
         # docker build -t "$PODMAN_IMAGE:v5.5.1"  -f ./Dockerfile .
-        docker buildx build $BUILDX_OPTS --force-rm -t $PODMAN_TAR_IMAGE --target tar-archive .
+        docker buildx build $BUILDX_OPTS --force-rm -t $PODMAN_TAR_IMAGE --target prod .
 
 
     # - name: Build & test
