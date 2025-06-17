@@ -87,11 +87,11 @@ jobs:
           LATEST_TAG="$([ "$TAG_SUFFIX" ] && echo $TAG_SUFFIX | sed -E -e 's/^-//' || echo latest)"
           [ "$TAGS" == "main" ] && IMAGE_TAGS="$LATEST_TAG" || IMAGE_TAGS="$LATEST_TAG $TAGS"
           TAG_OPTS=
-          printf 'Pushing image tags: '
+          # printf 'Pushing image tags: '
           for TAG in $IMAGE_TAGS; do
             [ "$TAG" = "$LATEST_TAG" ] || TAG="${TAG}${TAG_SUFFIX}"
             TAG_OPTS="$TAG_OPTS -t $GITHUB_IMAGE_REPO:$TAG"
-            printlnf ' %s' "$TAG"
+            println 'Pushing image tag:  %s' "$TAG"
             echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
             echo docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
             # docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
