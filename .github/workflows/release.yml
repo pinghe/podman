@@ -85,17 +85,17 @@ jobs:
         for IMAGE in $PODMAN_IMAGE; do
           TAG_SUFFIX=$(echo $IMAGE | sed -E -e 's/^([^-]+)//')
           LATEST_TAG="$([ "$TAG_SUFFIX" ] && echo $TAG_SUFFIX | sed -E -e 's/^-//' || echo latest)"
-          [ "$TAGS" == "master" ] && IMAGE_TAGS="$LATEST_TAG" || IMAGE_TAGS="$LATEST_TAG $TAGS"
+          [ "$TAGS" == "main" ] && IMAGE_TAGS="$LATEST_TAG" || IMAGE_TAGS="$LATEST_TAG $TAGS"
           TAG_OPTS=
           printf 'Pushing image tags: '
           for TAG in $IMAGE_TAGS; do
             [ "$TAG" = "$LATEST_TAG" ] || TAG="${TAG}${TAG_SUFFIX}"
             TAG_OPTS="$TAG_OPTS -t $GITHUB_IMAGE_REPO:$TAG"
             printf ' %s' "$TAG"
+            echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
+            docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
           done
           echo
-          echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
-          docker push $GITHUB_IMAGE_REPO:$tag  $GITHUB_IMAGE_REPO:$tag
         done
       env:
         BUILDX_OUTPUT: type=registry
