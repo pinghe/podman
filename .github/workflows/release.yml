@@ -94,7 +94,8 @@ jobs:
             printf ' %s' "$TAG" \n
             echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
             echo docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
-            docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
+            # docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
+            docker push ghcr.io/pinghe/podman:latest ghcr.io/pinghe/podman:latest
           done
           echo
         done
