@@ -36,7 +36,7 @@ jobs:
       run: |
         docker images
 
-        PODMAN_IMAGE_NAME=ghcr.io/pinghe/podman
+        PODMAN_IMAGE_NAME=ghcr.io/pinghe/podman/podman
         PODMAN_IMAGE=${PODMAN_IMAGE_NAME}:latest
         PODMAN_IMAGE_TARGET=podmanall
         PODMAN_TAR_IMAGE=${PODMAN_IMAGE}
@@ -98,7 +98,7 @@ jobs:
             echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
             echo docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
             # docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
-            docker push ghcr.io/pinghe/podman:latest
+            docker push $GITHUB_IMAGE_REPO:$TAG
           done
           echo
         done
