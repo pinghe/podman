@@ -36,10 +36,10 @@ jobs:
       run: |
         docker images
 
-        PODMAN_IMAGE_NAME=pinghe/podman
+        PODMAN_IMAGE_NAME=ghcr.io/pinghe/podman
         PODMAN_IMAGE=${PODMAN_IMAGE_NAME}:latest
         PODMAN_IMAGE_TARGET=podmanall
-        PODMAN_TAR_IMAGE=${PODMAN_IMAGE}-tar
+        PODMAN_TAR_IMAGE=${PODMAN_IMAGE}
 
         PLATFORM=linux/amd64
         ARCH=$(echo "${PLATFORM}" | sed -E 's!linux/([^/]+).*!\1!')
@@ -95,7 +95,7 @@ jobs:
           done
           echo
           echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
-          # podman push $imagename:$tag  ${regsvr}/$giteauser/$imagename:$tag
+          docker push $GITHUB_IMAGE_REPO:$tag  $GITHUB_IMAGE_REPO:$tag
         done
       env:
         BUILDX_OUTPUT: type=registry
