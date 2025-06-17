@@ -47,7 +47,8 @@ jobs:
         BUILDX_BUILDER=podman-builder
         # TODO: just push the other image and build tar files from output, skip tests for other platforms for now
         BUILDX_OUTPUT="type=docker"
-        BUILDX_OPTS="--builder=${BUILDX_BUILDER} --output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
+        # BUILDX_OPTS="--builder=${BUILDX_BUILDER} --output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
+        BUILDX_OPTS="--output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
 
         # docker build -t "$PODMAN_IMAGE:v5.5.1"  -f ./Dockerfile .
         docker buildx build $BUILDX_OPTS --force-rm -t $PODMAN_TAR_IMAGE --target tar-archive .
