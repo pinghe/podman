@@ -105,7 +105,8 @@ jobs:
             echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
             echo docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
             # docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
-            docker push $GITHUB_IMAGE_REPO/podman:$TAG
+            docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
+            docker push $GITHUB_IMAGE_REPO:$TAG
           done
           echo
         done
