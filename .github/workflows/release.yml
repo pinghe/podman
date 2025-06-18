@@ -15,7 +15,8 @@ permissions:
   # 允许写入包注册表（必需）
   packages: write
   # 默认允许读取仓库内容（可选，但建议显式声明）
-  contents: read
+  contents: write
+  # contents: read
 
 env:
   PODMAN_IMAGE: podman
@@ -28,12 +29,12 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
-    - name: Set up qemu
-      uses: docker/setup-qemu-action@v1
-      with:
-        platforms: all
+    # - name: Set up qemu
+    #   uses: docker/setup-qemu-action@v1
+    #   with:
+    #     platforms: all
 
     - name: Print environment
       run: |
@@ -41,29 +42,40 @@ jobs:
         docker --version
         podman --version
 
-    - name: Build Image
-      run: |
-        docker images
+    - name: Buildah Action
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ env.PODMAN_IMAGE }}
+        tags: latest ${{ github.sha }} ${{ github.ref }}
+        containerfiles: |
+          ./Dockerfile
+        # build-args: |
+        #   some_arg=some_value
 
-        # DOCKER=docker
-        DOCKER=podman
+    # - name: Build Image
+    #   run: |
+    #     docker images
 
-        PODMAN_IMAGE_NAME=${IMAGE_REGISTRY}/pinghe/podman
-        PODMAN_IMAGE=${PODMAN_IMAGE_NAME}:latest
-        PODMAN_IMAGE_TARGET=podmanall
-        PODMAN_TAR_IMAGE=${PODMAN_IMAGE}
+    #     # DOCKER=docker
+    #     DOCKER=podman
 
-        PLATFORM=linux/amd64
-        ARCH=$(echo "${PLATFORM}" | sed -E 's!linux/([^/]+).*!\1!')
-        IMAGE_EXPORT_DIR=${BUILD_DIR}/images/podman
-        BUILDX_BUILDER=podman-builder
-        # TODO: just push the other image and build tar files from output, skip tests for other platforms for now
-        BUILDX_OUTPUT="type=docker"
-        # BUILDX_OPTS="--builder=${BUILDX_BUILDER} --output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
-        BUILDX_OPTS="--output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
+    #     PODMAN_IMAGE_NAME=${IMAGE_REGISTRY}/pinghe/podman
+    #     PODMAN_IMAGE=${PODMAN_IMAGE_NAME}:latest
+    #     PODMAN_IMAGE_TARGET=podmanall
+    #     PODMAN_TAR_IMAGE=${PODMAN_IMAGE}
 
-        # docker build -t "$PODMAN_IMAGE:v5.5.1"  -f ./Dockerfile .
-        ${DOCKER} buildx build $BUILDX_OPTS --force-rm -t $PODMAN_TAR_IMAGE --target prod .
+    #     PLATFORM=linux/amd64
+    #     ARCH=$(echo "${PLATFORM}" | sed -E 's!linux/([^/]+).*!\1!')
+    #     IMAGE_EXPORT_DIR=${BUILD_DIR}/images/podman
+    #     BUILDX_BUILDER=podman-builder
+    #     # TODO: just push the other image and build tar files from output, skip tests for other platforms for now
+    #     BUILDX_OUTPUT="type=docker"
+    #     # BUILDX_OPTS="--builder=${BUILDX_BUILDER} --output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
+    #     BUILDX_OPTS="--output=${BUILDX_OUTPUT} --platform=${PLATFORM}"
+
+    #     # docker build -t "$PODMAN_IMAGE:v5.5.1"  -f ./Dockerfile .
+    #     ${DOCKER} buildx build $BUILDX_OPTS --force-rm -t $PODMAN_TAR_IMAGE --target prod .
 
 
     # - name: Build & test
@@ -82,55 +94,70 @@ jobs:
         password: ${{ github.token }}
         registry: ${{ env.IMAGE_REGISTRY }}/${{ github.repository_owner }}
 
+    # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+    # in which case 'username' and 'password' can be omitted.
+    - name: Push To ${{ env.IMAGE_REGISTRY }}
+      id: push-image
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: ${{ env.IMAGE_REGISTRY }}/${{ github.repository_owner }}
+        # username: quay-user
+        # password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: Print image url
+      run: echo "Image pushed to ${{ steps.push-image.outputs.registry-paths }}"
+
     # - name: Log into GitHub registry
     #   run: echo "$GITHUB_TOKEN" | ${DOCKER} login ${IMAGE_REGISTRY} -u ${{ github.actor }} --password-stdin
     #   env:
     #     GITHUB_TOKEN: ${{ github.token }}
 
-    - name: Push images
-      run: |
-        set -eu
+    # - name: Push images
+    #   run: |
+    #     set -eu
 
-        env
+    #     env
 
-        GITHUB_IMAGE_REPO=ghcr.io/pinghe/podman
-        GITHUB_IMAGE_REPO=$(echo $GITHUB_IMAGE_REPO | tr '[A-Z]' '[a-z]')
+    #     GITHUB_IMAGE_REPO=ghcr.io/pinghe/podman
+    #     GITHUB_IMAGE_REPO=$(echo $GITHUB_IMAGE_REPO | tr '[A-Z]' '[a-z]')
 
-        # Strip git ref prefix from version
-        TAGS=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')
-        # Strip "v" prefix from tag name
-        [[ "$GITHUB_REF" == "refs/tags/v"* ]] && TAGS=$(echo $TAGS | sed -e 's/^v//')
-        # Expand tags: 1.2.3 -> 1 1.2 1.2.3
-        TAGS="$(echo "$TAGS" | sed -E -e 's/^((([0-9]+)\.[0-9]+)\.[0-9]+)$/\3 \2 \1/')"
+    #     # Strip git ref prefix from version
+    #     TAGS=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')
+    #     # Strip "v" prefix from tag name
+    #     [[ "$GITHUB_REF" == "refs/tags/v"* ]] && TAGS=$(echo $TAGS | sed -e 's/^v//')
+    #     # Expand tags: 1.2.3 -> 1 1.2 1.2.3
+    #     TAGS="$(echo "$TAGS" | sed -E -e 's/^((([0-9]+)\.[0-9]+)\.[0-9]+)$/\3 \2 \1/')"
 
-        podman --help
-        ${DOCKER} images
-        # podman images
-        # docker push --help
+    #     podman --help
+    #     ${DOCKER} images
+    #     # podman images
+    #     # docker push --help
 
-        for IMAGE in $PODMAN_IMAGE; do
-          TAG_SUFFIX=$(echo $IMAGE | sed -E -e 's/^([^-]+)//')
-          LATEST_TAG="$([ "$TAG_SUFFIX" ] && echo $TAG_SUFFIX | sed -E -e 's/^-//' || echo latest)"
-          [ "$TAGS" == "main" ] && IMAGE_TAGS="$LATEST_TAG" || IMAGE_TAGS="$LATEST_TAG $TAGS"
-          TAG_OPTS=
-          # printf 'Pushing image tags: '
-          for TAG in $IMAGE_TAGS; do
-            [ "$TAG" = "$LATEST_TAG" ] || TAG="${TAG}${TAG_SUFFIX}"
-            TAG_OPTS="$TAG_OPTS -t $GITHUB_IMAGE_REPO:$TAG"
-            printf 'Pushing image tag:  %s \n' "$TAG"
-            echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
-            # docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
-            # echo docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
-            # docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
-            echo ${DOCKER} push $GITHUB_IMAGE_REPO:$TAG
-            # podman push $GITHUB_IMAGE_REPO:$TAG
-          done
-          echo
-        done
-      env:
-        BUILDX_OUTPUT: type=registry
-        PLATFORM: linux/arm64/v8,linux/amd64
-        GITHUB_REF: ${{ github.ref }}
+    #     for IMAGE in $PODMAN_IMAGE; do
+    #       TAG_SUFFIX=$(echo $IMAGE | sed -E -e 's/^([^-]+)//')
+    #       LATEST_TAG="$([ "$TAG_SUFFIX" ] && echo $TAG_SUFFIX | sed -E -e 's/^-//' || echo latest)"
+    #       [ "$TAGS" == "main" ] && IMAGE_TAGS="$LATEST_TAG" || IMAGE_TAGS="$LATEST_TAG $TAGS"
+    #       TAG_OPTS=
+    #       # printf 'Pushing image tags: '
+    #       for TAG in $IMAGE_TAGS; do
+    #         [ "$TAG" = "$LATEST_TAG" ] || TAG="${TAG}${TAG_SUFFIX}"
+    #         TAG_OPTS="$TAG_OPTS -t $GITHUB_IMAGE_REPO:$TAG"
+    #         printf 'Pushing image tag:  %s \n' "$TAG"
+    #         echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
+    #         # docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
+    #         # echo docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
+    #         # docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
+    #         echo ${DOCKER} push $GITHUB_IMAGE_REPO:$TAG
+    #         # podman push $GITHUB_IMAGE_REPO:$TAG
+    #       done
+    #       echo
+    #     done
+    #   env:
+    #     BUILDX_OUTPUT: type=registry
+    #     PLATFORM: linux/arm64/v8,linux/amd64
+    #     GITHUB_REF: ${{ github.ref }}
 
     - name: Create release
       if: github.ref != 'refs/heads/main'
