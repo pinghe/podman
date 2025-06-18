@@ -16,7 +16,7 @@ permissions:
   packages: write
   # 默认允许读取仓库内容（可选，但建议显式声明）
   contents: read
-  
+
 env:
   PODMAN_IMAGE: podman
 
@@ -115,7 +115,7 @@ jobs:
         GITHUB_REF: ${{ github.ref }}
 
     - name: Create release
-      if: github.ref != 'refs/heads/master'
+      if: github.ref != 'refs/heads/main'
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -127,7 +127,7 @@ jobs:
         prerelease: true
 
     # - name: Upload arm64 archive signature
-    #   if: github.ref != 'refs/heads/master'
+    #   if: github.ref != 'refs/heads/main'
     #   id: upload-arm64-archive-signature
     #   uses: actions/upload-release-asset@v1
     #   env:
@@ -139,7 +139,7 @@ jobs:
     #     asset_content_type: application/octet-stream
 
     # - name: Upload arm64 archive
-    #   if: github.ref != 'refs/heads/master'
+    #   if: github.ref != 'refs/heads/main'
     #   id: upload-arm64-archive
     #   uses: actions/upload-release-asset@v1
     #   env:
@@ -151,7 +151,7 @@ jobs:
     #     asset_content_type: application/octet-stream
 
     - name: Upload amd64 archive signature
-      if: github.ref != 'refs/heads/master'
+      if: github.ref != 'refs/heads/main'
       id: upload-amd64-archive-signature
       uses: actions/upload-release-asset@v1
       env:
@@ -163,7 +163,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload amd64 archive
-      if: github.ref != 'refs/heads/master'
+      if: github.ref != 'refs/heads/main'
       id: upload-amd64-archive
       uses: actions/upload-release-asset@v1
       env:
