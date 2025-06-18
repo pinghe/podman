@@ -44,8 +44,8 @@ jobs:
       run: |
         docker images
 
-        # DOCKER?=docker
-        DOCKER?=podman
+        # DOCKER=docker
+        DOCKER=podman
 
         PODMAN_IMAGE_NAME=ghcr.io/pinghe/podman
         PODMAN_IMAGE=${PODMAN_IMAGE_NAME}:latest
