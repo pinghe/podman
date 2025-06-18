@@ -10,6 +10,13 @@ on:
     tags:
     - v*
 
+# 全局权限配置
+permissions:
+  # 允许写入包注册表（必需）
+  packages: write
+  # 默认允许读取仓库内容（可选，但建议显式声明）
+  contents: read
+  
 env:
   PODMAN_IMAGE: podman
 
