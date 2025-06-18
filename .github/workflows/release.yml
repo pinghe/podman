@@ -91,6 +91,7 @@ jobs:
 
         podman --help
         docker images
+        podman images
         # docker push --help
 
         for IMAGE in $PODMAN_IMAGE; do
@@ -105,10 +106,10 @@ jobs:
             printf 'Pushing image tag:  %s \n' "$TAG"
             echo "Pushing $IMAGE image to $GITHUB_IMAGE_REPO"
             # docker push $GITHUB_IMAGE_REPO:latest  $GITHUB_IMAGE_REPO:$TAG
-            echo docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
-            docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
+            # echo docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
+            # docker tag $PODMAN_IMAGE $GITHUB_IMAGE_REPO:$TAG
             echo docker push $GITHUB_IMAGE_REPO:$TAG
-            docker push $GITHUB_IMAGE_REPO:$TAG
+            # podman push $GITHUB_IMAGE_REPO:$TAG
           done
           echo
         done
