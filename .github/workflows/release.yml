@@ -54,12 +54,12 @@ jobs:
         # Expand tags: 1.2.3 -> 1 1.2 1.2.3
         TAGS="$(echo "$TAGS" | sed -E -e 's/^((([0-9]+)\.[0-9]+)\.[0-9]+)$/\3 \2 \1/')"
         echo $TAGS
-        export TAGS=$TAGS
+        echo "TAGS=$TAGS" >> $GITHUB_ENV
 
-    - name: Process TAGS
+    - name: Echo TAGS
       run: |
         echo TAGS=$TAGS
-        echo env.TAGS=${{env.TAGS}}
+        echo env.TAGS=${{ env.TAGS }}
  
     # - name: Buildah Action
     #   id: build-image
