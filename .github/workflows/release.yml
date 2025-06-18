@@ -70,6 +70,7 @@ jobs:
         # tags: latest ${{ github.sha }} ${{ env.TAGS }}
         containerfiles: |
           ./Dockerfile
+        oci: true
         # build-args: |
         #   some_arg=some_value
 
