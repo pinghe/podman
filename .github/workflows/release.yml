@@ -90,7 +90,7 @@ jobs:
         TAGS="$(echo "$TAGS" | sed -E -e 's/^((([0-9]+)\.[0-9]+)\.[0-9]+)$/\3 \2 \1/')"
 
         docker images
-        docker push --help
+        # docker push --help
 
         for IMAGE in $PODMAN_IMAGE; do
           TAG_SUFFIX=$(echo $IMAGE | sed -E -e 's/^([^-]+)//')
@@ -114,62 +114,62 @@ jobs:
         PLATFORM: linux/arm64/v8,linux/amd64
         GITHUB_REF: ${{ github.ref }}
 
-    # - name: Create release
+    - name: Create release
+      if: github.ref != 'refs/heads/master'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: true
+
+    # - name: Upload arm64 archive signature
     #   if: github.ref != 'refs/heads/master'
-    #   id: create_release
-    #   uses: actions/create-release@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     tag_name: ${{ github.ref }}
-    #     release_name: ${{ github.ref }}
-    #     draft: false
-    #     prerelease: true
-
-    # # - name: Upload arm64 archive signature
-    # #   if: github.ref != 'refs/heads/master'
-    # #   id: upload-arm64-archive-signature
-    # #   uses: actions/upload-release-asset@v1
-    # #   env:
-    # #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    # #   with:
-    # #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-    # #     asset_path: ./build/asset/podman-linux-arm64.tar.gz.asc
-    # #     asset_name: podman-linux-arm64.tar.gz.asc
-    # #     asset_content_type: application/octet-stream
-
-    # # - name: Upload arm64 archive
-    # #   if: github.ref != 'refs/heads/master'
-    # #   id: upload-arm64-archive
-    # #   uses: actions/upload-release-asset@v1
-    # #   env:
-    # #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    # #   with:
-    # #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-    # #     asset_path: ./build/asset/podman-linux-arm64.tar.gz
-    # #     asset_name: podman-linux-arm64.tar.gz
-    # #     asset_content_type: application/octet-stream
-
-    # - name: Upload amd64 archive signature
-    #   if: github.ref != 'refs/heads/master'
-    #   id: upload-amd64-archive-signature
+    #   id: upload-arm64-archive-signature
     #   uses: actions/upload-release-asset@v1
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #   with:
     #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-    #     asset_path: ./build/asset/podman-linux-amd64.tar.gz.asc
-    #     asset_name: podman-linux-amd64.tar.gz.asc
+    #     asset_path: ./build/asset/podman-linux-arm64.tar.gz.asc
+    #     asset_name: podman-linux-arm64.tar.gz.asc
     #     asset_content_type: application/octet-stream
 
-    # - name: Upload amd64 archive
+    # - name: Upload arm64 archive
     #   if: github.ref != 'refs/heads/master'
-    #   id: upload-amd64-archive
+    #   id: upload-arm64-archive
     #   uses: actions/upload-release-asset@v1
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #   with:
     #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-    #     asset_path: ./build/asset/podman-linux-amd64.tar.gz
-    #     asset_name: podman-linux-amd64.tar.gz
+    #     asset_path: ./build/asset/podman-linux-arm64.tar.gz
+    #     asset_name: podman-linux-arm64.tar.gz
     #     asset_content_type: application/octet-stream
+
+    - name: Upload amd64 archive signature
+      if: github.ref != 'refs/heads/master'
+      id: upload-amd64-archive-signature
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./build/asset/podman-linux-amd64.tar.gz.asc
+        asset_name: podman-linux-amd64.tar.gz.asc
+        asset_content_type: application/octet-stream
+
+    - name: Upload amd64 archive
+      if: github.ref != 'refs/heads/master'
+      id: upload-amd64-archive
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./build/asset/podman-linux-amd64.tar.gz
+        asset_name: podman-linux-amd64.tar.gz
+        asset_content_type: application/octet-stream
