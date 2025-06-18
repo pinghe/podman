@@ -75,13 +75,15 @@ jobs:
     #     GPG_SIGN_KEY_PASSPHRASE: ${{ secrets.GPG_SIGN_KEY_PASSPHRASE }}
 
     - name: Log into GitHub registry
-      run: echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      run: echo "$GITHUB_TOKEN" | ${DOCKER} login ghcr.io -u ${{ github.actor }} --password-stdin
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
     - name: Push images
       run: |
         set -eu
+
+        env
 
         GITHUB_IMAGE_REPO=ghcr.io/pinghe/podman
         GITHUB_IMAGE_REPO=$(echo $GITHUB_IMAGE_REPO | tr '[A-Z]' '[a-z]')
