@@ -7,7 +7,7 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     pwd && \
     apk update && \
     apk upgrade && \
-    apk add --no-cache tzdata coreutils nodejs git curl wget bash uidmap iptables nsenter && \
+    apk add --no-cache tzdata coreutils nodejs git curl wget bash iptables util-linux shadow && \
     echo $(id -un):100000:200000 >> /etc/subuid && \
     echo $(id -gn):100000:200000 >> /etc/subgid && \
     sed -Ei 's!^profile podman /usr/bin/podman !profile podman /usr/{bin,local/bin}/podman !' /etc/apparmor.d/podman && \
