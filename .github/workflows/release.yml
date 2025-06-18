@@ -42,6 +42,18 @@ jobs:
         docker --version
         podman --version
 
+        GITHUB_REF=${{ github.ref }}
+        # Strip git ref prefix from version
+        TAGS=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')
+        echo $TAGS
+        # Strip "v" prefix from tag name
+        [[ "$GITHUB_REF" == "refs/tags/v"* ]] && TAGS=$(echo $TAGS | sed -e 's/^v//')
+        echo $TAGS
+        # Expand tags: 1.2.3 -> 1 1.2 1.2.3
+        TAGS="$(echo "$TAGS" | sed -E -e 's/^((([0-9]+)\.[0-9]+)\.[0-9]+)$/\3 \2 \1/')"
+        echo $TAGS
+
+
     - name: Buildah Action
       id: build-image
       uses: redhat-actions/buildah-build@v2
