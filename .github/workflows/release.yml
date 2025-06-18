@@ -61,16 +61,17 @@ jobs:
         echo TAGS=$TAGS
         echo env.TAGS=${{ env.TAGS }}
  
-    # - name: Buildah Action
-    #   id: build-image
-    #   uses: redhat-actions/buildah-build@v2
-    #   with:
-    #     image: ${{ env.PODMAN_IMAGE }}
-    #     tags: latest ${{ github.sha }} ${{ env.TAGS }}
-    #     containerfiles: |
-    #       ./Dockerfile
-    #     # build-args: |
-    #     #   some_arg=some_value
+    - name: Buildah Action
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ env.PODMAN_IMAGE }}
+        tags: latest ${{ env.TAGS }}
+        # tags: latest ${{ github.sha }} ${{ env.TAGS }}
+        containerfiles: |
+          ./Dockerfile
+        # build-args: |
+        #   some_arg=some_value
 
     # # - name: Build Image
     # #   run: |
