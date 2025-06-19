@@ -9,8 +9,8 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     apk update && \
     apk upgrade && \
     apk add --no-cache tzdata coreutils containerd nodejs git curl wget bash iptables util-linux shadow podman && \
-    modprobe tun && \
-    modprobe fuse && \
+    # modprobe tun && \
+    # modprobe fuse && \
     # rc-service cgroups start && \
     # rc-update add cgroups && \
     # service cgroups start && \
@@ -25,6 +25,7 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     #     EOF && \
     # /bin/bash -c 'echo [engine] && echo cgroup_manager = "cgroupfs" && echo events_logger = "file" && echo [security] && echo label = false && echo apparmor_profile = ""' | tee /etc/containers/containers.conf && \
     # /bin/bash -c 'echo [security] && echo label = false && echo apparmor_profile = ""' | tee /etc/containers/containers.conf && \
+    sed -i 's/driver = "overlay"/driver = "vfs"/' /etc/containers/storage.conf && \
     cat /etc/containers/containers.conf && \
     # service apparmor enable && \
     # aa-status && \
