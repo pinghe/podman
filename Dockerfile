@@ -18,7 +18,7 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     #     apparmor_profile=""
     #     EOF && \
     cat /etc/containers/containers.conf && \
-    service apparmor enable && \
+    # service apparmor enable && \
     # aa-status && \
     echo $(id -un):100000:200000 >> /etc/subuid && \
     echo $(id -gn):100000:200000 >> /etc/subgid && \
