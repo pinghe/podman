@@ -18,6 +18,7 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     #     apparmor_profile=""
     #     EOF && \
     cat /etc/containers/containers.conf && \
+    /bin/bash -c 'echo "[engine]" && echo "cgroup_manager = \"cgroupfs\"" | tee /etc/containers/containers.conf && \
     # service apparmor enable && \
     # aa-status && \
     echo $(id -un):100000:200000 >> /etc/subuid && \
@@ -25,11 +26,11 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     # sed -Ei 's!^profile podman /usr/bin/podman !profile podman /usr/{bin,local/bin}/podman !' /etc/apparmor.d/podman && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
-RUN tee /etc/containers/containers.conf <<EOF
-    [engine]
-    cgroup_manager = "cgroupfs"
-    events_logger="file"
-    [security]
-    label=false
-    apparmor_profile=""
-    EOF
+# RUN tee /etc/containers/containers.conf <<EOF
+#     [engine]
+#     cgroup_manager = "cgroupfs"
+#     events_logger="file"
+#     [security]
+#     label=false
+#     apparmor_profile=""
+#     EOF
