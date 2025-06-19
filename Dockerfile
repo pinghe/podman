@@ -17,8 +17,8 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     #     label=false
     #     apparmor_profile=""
     #     EOF && \
-    cat /etc/containers/containers.conf && \
     /bin/bash -c 'echo "[engine]" && echo "cgroup_manager = \"cgroupfs\"" | tee /etc/containers/containers.conf && \
+    cat /etc/containers/containers.conf && \
     # service apparmor enable && \
     # aa-status && \
     echo $(id -un):100000:200000 >> /etc/subuid && \
