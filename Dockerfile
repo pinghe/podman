@@ -10,13 +10,13 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     apk upgrade && \
     apk add --no-cache tzdata coreutils containerd nodejs git curl wget bash iptables util-linux shadow apparmor && \
     tee /etc/containers/containers.conf <<EOF
-    [engine]
-    cgroup_manager = "cgroupfs"
-    events_logger="file"
-    [security]
-    label=false
-    apparmor_profile=""
-    EOF && \
+[engine]
+cgroup_manager = "cgroupfs"
+events_logger="file"
+[security]
+label=false
+apparmor_profile=""
+EOF && \
     cat /etc/containers/containers.conf && \
     service apparmor enable && \
     # aa-status && \
