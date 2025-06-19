@@ -17,7 +17,7 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     #     label=false
     #     apparmor_profile=""
     #     EOF && \
-    /bin/bash -c 'echo [engine] && echo cgroup_manager = "cgroupfs" | tee /etc/containers/containers.conf && \
+    /bin/bash -c 'echo [engine] && echo cgroup_manager = "cgroupfs"' | tee /etc/containers/containers.conf && \
     cat /etc/containers/containers.conf && \
     # service apparmor enable && \
     # aa-status && \
