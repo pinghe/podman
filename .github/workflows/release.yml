@@ -24,8 +24,11 @@ env:
 
 jobs:
   push:
-    runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu-24.04
+      options: --security-opt seccomp=unconfined      
 
     steps:
     - name: Check out code

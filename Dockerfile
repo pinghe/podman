@@ -8,9 +8,9 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     whoami && \
     apk update && \
     apk upgrade && \
-    apk add --no-cache tzdata coreutils containerd nodejs git curl wget bash iptables util-linux shadow podman && \
+    apk add --no-cache tzdata coreutils nodejs git curl wget bash iptables util-linux shadow containerd podman && \
     ln -s $(which podman) /usr/local/bin/docker && \
-    # modprobe tun && \
+    modprobe tun && \
     # modprobe fuse && \
     # rc-service cgroups start && \
     # rc-update add cgroups && \
