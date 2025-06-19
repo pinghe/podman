@@ -9,7 +9,7 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     apk update && \
     apk upgrade && \
     apk add --no-cache tzdata coreutils containerd nodejs git curl wget bash iptables util-linux shadow podman && \
-    rc-service cgroups start && \
+    # rc-service cgroups start && \
     # rc-update add cgroups && \
     # service cgroups start && \
      # apparmor 
