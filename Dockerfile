@@ -1,4 +1,4 @@
-FROM ghcr.io/mgoltzsche/podman:5.5.1 AS prod
+FROM alpine
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
@@ -8,7 +8,9 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     whoami && \
     apk update && \
     apk upgrade && \
-    apk add --no-cache tzdata coreutils containerd nodejs git curl wget bash iptables util-linux shadow && \
+    apk add --no-cache tzdata coreutils containerd nodejs git curl wget bash iptables util-linux shadow podman && \
+    rc-update add cgroups && \
+    service cgroups start && \
      # apparmor 
     # tee /etc/containers/containers.conf <<EOF
     #     [engine]
