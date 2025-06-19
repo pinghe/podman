@@ -10,7 +10,7 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     apk upgrade && \
     apk add --no-cache tzdata coreutils containerd nodejs git curl wget bash iptables util-linux shadow apparmor && \
     cat /etc/containers/containers.conf && \
-    rc-service apparmor enable && \
+    service apparmor enable && \
     # aa-status && \
     echo $(id -un):100000:200000 >> /etc/subuid && \
     echo $(id -gn):100000:200000 >> /etc/subgid && \
