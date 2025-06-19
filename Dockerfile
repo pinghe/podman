@@ -5,6 +5,7 @@ ENV TZ=Asia/Shanghai
 
 RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     pwd && \
+    whoami && \
     apk update && \
     apk upgrade && \
     apk add --no-cache tzdata coreutils nodejs git curl wget bash iptables util-linux shadow && \
