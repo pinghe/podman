@@ -22,5 +22,5 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     # aa-status && \
     echo $(id -un):100000:200000 >> /etc/subuid && \
     echo $(id -gn):100000:200000 >> /etc/subgid && \
-    sed -Ei 's!^profile podman /usr/bin/podman !profile podman /usr/{bin,local/bin}/podman !' /etc/apparmor.d/podman && \
+    # sed -Ei 's!^profile podman /usr/bin/podman !profile podman /usr/{bin,local/bin}/podman !' /etc/apparmor.d/podman && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
