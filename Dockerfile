@@ -9,7 +9,9 @@ RUN info(){ printf '\x1B[32m--\n%s\n--\n\x1B[0m' "$*"; } && \
     # rc-service apparmor enable whoami && \
     apk update && \
     apk upgrade && \
-    apk add --no-cache tzdata coreutils nodejs git curl wget bash iptables util-linux shadow apparmor && \
+    apk add --no-cache tzdata coreutils container nodejs git curl wget bash iptables util-linux shadow apparmor && \
+    cat /etc/containers/containers.conf && \
+    aa-status && \
     echo $(id -un):100000:200000 >> /etc/subuid && \
     echo $(id -gn):100000:200000 >> /etc/subgid && \
     sed -Ei 's!^profile podman /usr/bin/podman !profile podman /usr/{bin,local/bin}/podman !' /etc/apparmor.d/podman && \

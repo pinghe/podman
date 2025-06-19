@@ -41,7 +41,7 @@ jobs:
         uname -a
         docker --version
         podman --version
-        cat /etc/containers/containers.conf 
+        # cat /etc/containers/containers.conf 
 
     - name: Process TAGS
       run: |
